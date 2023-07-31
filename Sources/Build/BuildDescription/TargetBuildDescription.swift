@@ -92,3 +92,10 @@ public enum TargetBuildDescription {
         }
     }
 }
+
+public protocol BuildTarget {
+    var target: ResolvedTarget { get }
+    var sources: [AbsolutePath] { get }
+
+    func compileArguments() throws -> [String]
+}

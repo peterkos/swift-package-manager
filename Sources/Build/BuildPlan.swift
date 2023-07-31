@@ -186,20 +186,20 @@ public class BuildPlan: SPMBuildCore.BuildPlan {
     }
 
     /// The package graph.
-    public let graph: PackageGraph
+    let graph: PackageGraph
 
     /// The target build description map.
-    public let targetMap: [ResolvedTarget: TargetBuildDescription]
+    let targetMap: [ResolvedTarget: TargetBuildDescription]
 
     /// The product build description map.
-    public let productMap: [ResolvedProduct: ProductBuildDescription]
+    let productMap: [ResolvedProduct: ProductBuildDescription]
 
     /// The plugin descriptions. Plugins are represented in the package graph
     /// as targets, but they are not directly included in the build graph.
-    public let pluginDescriptions: [PluginDescription]
+    let pluginDescriptions: [PluginDescription]
 
     /// The build targets.
-    public var targets: AnySequence<TargetBuildDescription> {
+    var targets: AnySequence<TargetBuildDescription> {
         return AnySequence(targetMap.values)
     }
 
@@ -209,11 +209,11 @@ public class BuildPlan: SPMBuildCore.BuildPlan {
     }
 
     /// The results of invoking any build tool plugins used by targets in this build.
-    public let buildToolPluginInvocationResults: [ResolvedTarget: [BuildToolPluginInvocationResult]]
+    let buildToolPluginInvocationResults: [ResolvedTarget: [BuildToolPluginInvocationResult]]
 
     /// The results of running any prebuild commands for the targets in this build.  This includes any derived
     /// source files as well as directories to which any changes should cause us to reevaluate the build plan.
-    public let prebuildCommandResults: [ResolvedTarget: [PrebuildCommandResult]]
+    let prebuildCommandResults: [ResolvedTarget: [PrebuildCommandResult]]
 
     private var derivedTestTargetsMap: [ResolvedProduct: [ResolvedTarget]] = [:]
 
@@ -1038,6 +1038,22 @@ public class BuildPlan: SPMBuildCore.BuildPlan {
         try self.externalExecutablesCache.memoize(key: target) {
             let execInfos = try target.parseArtifactArchives(for: self.buildParameters.targetTriple, fileSystem: self.fileSystem)
             return execInfos.filter{!$0.supportedTriples.isEmpty}
+        }
+    }
+
+    public func getBuildTarget(for target: ResolvedTarget) -> BuildTarget? {
+        if let description = targetMap[target] {
+            switch description {
+            case .clang(let description):
+                return description
+            case .swift(let description):
+                return description
+            }
+        } else {
+            if target.type == .plugin, let package = self.graph.package(for: target) {
+                return PluginTargetBuildDescription(target: target, toolsVersion: package.manifest.toolsVersion)
+            }
+            return nil
         }
     }
 }

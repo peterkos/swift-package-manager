@@ -21,7 +21,7 @@ import struct SPMBuildCore.PrebuildCommandResult
 import enum TSCBasic.ProcessEnv
 
 /// Target description for a Clang target i.e. C language family target.
-public final class ClangTargetBuildDescription {
+public final class ClangTargetBuildDescription: BuildTarget {
     /// The target described by this target.
     public let target: ResolvedTarget
 
@@ -424,5 +424,15 @@ public final class ClangTargetBuildDescription {
             path: headerFile,
             string: headerContent
         )
+    }
+
+    // MARK: - `BuildTarget`
+
+    public var sources: [AbsolutePath] {
+        return (try? compilePaths().map { $0.source }) ?? []
+    }
+
+    public func compileArguments() throws -> [String] {
+        return try self.basicArguments()
     }
 }

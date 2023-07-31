@@ -21,7 +21,7 @@ import SPMBuildCore
 import struct TSCBasic.ByteString
 
 /// Target description for a Swift target.
-public final class SwiftTargetBuildDescription {
+public final class SwiftTargetBuildDescription: BuildTarget {
     /// The package this target belongs to.
     public let package: ResolvedPackage
 
