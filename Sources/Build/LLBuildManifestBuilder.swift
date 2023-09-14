@@ -11,12 +11,12 @@
 //===----------------------------------------------------------------------===//
 
 import Basics
-@_implementationOnly import DriverSupport
+private import DriverSupport
 import LLBuildManifest
 import PackageGraph
 import PackageModel
 import SPMBuildCore
-@_implementationOnly import SwiftDriver
+private import SwiftDriver
 
 import struct TSCBasic.ByteString
 import enum TSCBasic.ProcessEnv

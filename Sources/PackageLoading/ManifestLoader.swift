@@ -12,7 +12,7 @@
 
 import Basics
 import Dispatch
-@_implementationOnly import Foundation
+private import Foundation
 import PackageModel
 
 import class TSCBasic.BufferedOutputByteStream

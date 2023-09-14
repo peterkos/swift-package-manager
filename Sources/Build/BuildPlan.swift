@@ -18,7 +18,7 @@ import PackageGraph
 import PackageLoading
 import PackageModel
 import SPMBuildCore
-@_implementationOnly import SwiftDriver
+private import SwiftDriver
 
 import enum TSCBasic.ProcessEnv
 import func TSCBasic.topologicalSort
